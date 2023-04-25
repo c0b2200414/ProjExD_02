@@ -33,10 +33,25 @@ def main():
     kk_img = pg.image.load("ex02/fig/3.png")    
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
 
+    kk_img_ks = pg.transform.flip(kk_img, True, True)
+
+    kk_mk = {
+            (0, -1):pg.transform.rotozoom(kk_img, 0,  1),
+            (-1,-1):pg.transform.rotozoom(kk_img, 45, 1),
+            (-1, 0):pg.transform.rotozoom(kk_img, 90, 1),
+            (-1,+1):pg.transform.rotozoom(kk_img, 135,1),
+            (0, +1):pg.transform.rotozoom(kk_img,180, 1),
+            (+1,+1):pg.transform.rotozoom(kk_img,180,1),
+            (+1,0):pg.transform.rotozoom(kk_img,225,1),
+            (+1,-1):pg.transform.rotozoom(kk_img,270,1),
+            } #演習課題未完
+    
+
     bb_img = pg.Surface((20, 20))
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
-    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    z = 10
+    pg.draw.circle(bb_img, (255, 0, 0), [z,z], 10)
     x, y = random.randint(0, 1600), random.randint(0, 900)
     screen.blit(bb_img, [x, y])
     bb_img.set_colorkey((0, 0, 0))
@@ -51,13 +66,13 @@ def main():
                 return 0
             
         tmr += 1
-        
+        z *= 5
+        if z == 100:
+            z = 100
         key_lst = pg.key.get_pressed()
         for k, mv in delta.items():
             if key_lst[k]:
-                kk_rct.move_ip(mv)
-                kk_img = pg.transform.rotozoom(kk_img, mv, 1)
-                
+                kk_rct.move_ip(mv)         
 
         if check_bound(screen.get_rect(), kk_rct) != (True, True):
             for k, mv in delta.items():
@@ -65,7 +80,7 @@ def main():
                     kk_rct.move_ip(-mv[0], -mv[1])
 
         
-        screen.blit(bg_img, [0, 0])
+        screen.blit(bb_img, [0, 0])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
